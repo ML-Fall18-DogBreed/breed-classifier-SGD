@@ -10,5 +10,5 @@ module load cuda90/blas
 module load cuda90/profiler
 module load cuda90/nsight
 module load cuda90/fft
-#source ~/venv/bin/activate
+source ~/SGDvm/bin/activate
 python DogClassifier.py
