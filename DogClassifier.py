@@ -4,7 +4,6 @@ from PIL import Image
 import glob
 import Transformers
 import numpy as np
-import matplotlib.pyplot as plt
 from skimage import io
 import pprint
 from sklearn.model_selection import train_test_split
@@ -38,12 +37,7 @@ X_train, X_test, y_train, y_test = train_test_split(
     shuffle=False,
     random_state=None,
 )
-plt.imshow(X_train[0])
-print(X_train.shape)
-plt.imshow(X_train[1000])
-print(type(y_train))
-print(y_train.shape)
-plt.show()
+
 
 #process with hog
 #create an instance of each transformer
