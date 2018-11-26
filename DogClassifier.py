@@ -62,7 +62,10 @@ X_train_gray = grayify.fit_transform(X_train)
 X_train_hog = hogify.fit_transform(X_train_gray)
 X_train_prepared = scalify.fit_transform(X_train_hog)
 
-print(X_train_prepared.shape)
+X_test_gray = grayify.fit_transform(X_test)
+X_test_hog = hogify.fit_transform(X_test_gray)
+X_test_prepared = scalify.fit_transform(X_test_hog)
+
 
 
 #train
@@ -73,5 +76,5 @@ sgd_clf = SGDClassifier(alpha=0.00001, average=False, class_weight=None, epsilon
        tol=0.00001, verbose=1, warm_start=False,early_stopping=True,validation_fraction=0.05,n_iter_no_change=9)
 model = sgd_clf.fit(X_train_prepared, y_train)
 dump(sgd_clf,'model.joblib')
-score = sgd_clf.score(X_test,y_test)
+score = sgd_clf.score(X_test_prepared,y_test)
 print("score: ",score)
