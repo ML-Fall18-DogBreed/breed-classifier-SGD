@@ -4,7 +4,6 @@ from PIL import Image
 import glob
 import Transformers
 import numpy as np
-import matplotlib.pyplot as plt
 from skimage import io
 import pprint
 from sklearn.model_selection import train_test_split
@@ -45,6 +44,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 # print(y_train.shape)
 # plt.show()
 
+
 #process with hog
 #create an instance of each transformer
 
@@ -67,8 +67,6 @@ X_test_gray = grayify.fit_transform(X_test)
 X_test_hog = hogify.fit_transform(X_test_gray)
 X_test_prepared = scalify.fit_transform(X_test_hog)
 
-# np.save("X_test_prepared.npy",X_test_prepared)
-# np.save("X_train_prepared.npy",X_train_prepared)
 
 print(X_test_prepared.shape)
 print("begin training")
@@ -80,6 +78,7 @@ sgd_clf = SGDClassifier(alpha=0.00001, average=False, class_weight=None, epsilon
        n_jobs=1, penalty='l2', power_t=0.5, random_state=None, shuffle=True,
        tol=0.001, verbose=1, warm_start=False,early_stopping=True,validation_fraction=0.1,n_iter_no_change=9)
 model = sgd_clf.fit(X_train_prepared, y_train)
+
 joblib.dump(sgd_clf,'model3.joblib')
 
 # model = joblib.load('model2.joblib')
@@ -98,3 +97,4 @@ print("score: ",score)
 #max_iter = 1000, tol = .0001, score = .03
 #max_iter = 200, tol = .0005 score = .029
 ##max_iter = 50, tol = .001 score =  .0286
+

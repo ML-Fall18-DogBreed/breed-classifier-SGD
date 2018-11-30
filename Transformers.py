@@ -2,9 +2,7 @@ from sklearn.base import BaseEstimator, TransformerMixin
 import pandas as pd
 from PIL import Image
 import glob
-import Transformers
 import numpy as np
-import matplotlib.pyplot as plt
 from skimage import io
 import pprint
 from sklearn.model_selection import train_test_split
