@@ -72,25 +72,28 @@ print(X_test_prepared.shape)
 print("begin training")
 
 # #train
-sgd_clf = SGDClassifier(alpha=0.00001, average=False, class_weight=None, epsilon=0.1,
-       eta0=0.0, fit_intercept=True, l1_ratio=0.15,
-       learning_rate='optimal', loss='log', max_iter=100, n_iter=None,
-       n_jobs=1, penalty='l2', power_t=0.5, random_state=None, shuffle=True,
-       tol=0.001, verbose=1, warm_start=False,early_stopping=True,validation_fraction=0.1,n_iter_no_change=9)
-model = sgd_clf.fit(X_train_prepared, y_train)
 
-joblib.dump(sgd_clf,'model3.joblib')
+for i in range(1,100,10):
+	sgd_clf = SGDClassifier(alpha=0.00001, average=False, class_weight=None, epsilon=0.1,
+	       eta0=0.0, fit_intercept=True, l1_ratio=0.15,
+	       learning_rate='optimal', loss='log', max_iter=i, n_iter=None,
+	       n_jobs=1, penalty='l2', power_t=0.5, random_state=None, shuffle=True,
+	       tol=0.001, verbose=0, warm_start=False,early_stopping=True,validation_fraction=0.05,n_iter_no_change=9)
+	model = sgd_clf.fit(X_train_prepared, y_train)
 
-# model = joblib.load('model2.joblib')
-predicted = model.predict(X_test_prepared)
+	modelstr = "model"+str(i)+"maxIterations.joblib"
+	joblib.dump(sgd_clf,'model3.joblib')
+	print("Max Iterations = ", i)
+	# model = joblib.load('model2.joblib')
+	predicted = model.predict(X_test_prepared)
 
-print(np.array(y_test == predicted)[:25])
-print("Percentage correct: ", 100*np.sum(y_test == predicted)/len(y_test))
+	print(np.array(y_test == predicted)[:25])
+	print("Percentage correct: ", 100*np.sum(y_test == predicted)/len(y_test))
 
 
-print("Done training")
-score = model.score(X_test_prepared,y_test)
-print("score: ",score)
+	print("Done training")
+	score = model.score(X_test_prepared,y_test)
+	print("score: ",score)
 
 
 #max_iter = 100, tol = .001 score = .77
