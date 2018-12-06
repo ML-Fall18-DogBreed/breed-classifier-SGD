@@ -82,14 +82,21 @@ n_est = 2400
 
 
 ##BEGIN SVM
-# C=1.0
-# clf = svm.SVC(kernel='linear', C=C)
+C=1.0
+clf = svm.SVC(kernel='linear', C=C,verbose=True)
+#test encoded data set
+enc = LabelEncoder()
+enc.fit(Y_train.values)
+Y_train_encoded = enc.transform(Y_train.values)
+print(Y_train_encoded[:25])
+Y_test_encoded = enc.transform(Y_test.values)
+#Train model
+model = clf.fit(X_train, Y_train_encoded)
+dump(clf,'SVCVGG16.joblib')
+score = clf.score(X_test,Y_test_encoded)
+print("score: ",score)
 
-# #Train model
-# model = clf.fit(X_train, Y_train)
-# dump(clf,'SGDVGG16.joblib')
-# score = clf.score(X_test,Y_test)
-# print("score: ",score)
+#SVM score 0.60
 
 
 # # model = KMeans(n_clusters=120, random_state=0).fit(X_train)
@@ -111,33 +118,38 @@ n_est = 2400
 # 10, 120 = 9.77%
 # 2,600 = 3.78%
 # 5,100 = 5.4%
+# 10, 500, 12%
+# 2,2400, 5.34%
+# 
 # 
 #SGD on VG16
 #max iter 100, score = 50
 #max iter 200, score = 53
 #max iter 2000, score = 54
 #max iter 200, tolerance = 0.0001, score = 52
-
+#
+#SVM
+#60.6%
 
 
 #Begin neural network
-print("nn")
-enc = LabelEncoder()
-enc.fit(Y_train.values)
-Y_encoded = enc.transform(Y_train.values)
-print(Y_encoded[:25])
-Y_test_encoded = enc.transform(Y_test.values)
+# print("nn")
+# enc = LabelEncoder()
+# enc.fit(Y_train.values)
+# Y_encoded = enc.transform(Y_train.values)
+# print(Y_encoded[:25])
+# Y_test_encoded = enc.transform(Y_test.values)
 
-model = keras.Sequential([
-    keras.layers.Dense(len(X_train[0]), activation=tf.nn.relu),
-    keras.layers.Dense(120, activation=tf.nn.softmax)
-])
-model.compile(optimizer=tf.train.AdamOptimizer(), 
-              loss='sparse_categorical_crossentropy',
-              metrics=['accuracy'])
+# model = keras.Sequential([
+#     keras.layers.Dense(len(X_train[0]), activation=tf.nn.relu),
+#     keras.layers.Dense(120, activation=tf.nn.softmax)
+# ])
+# model.compile(optimizer=tf.train.AdamOptimizer(), 
+#               loss='sparse_categorical_crossentropy',
+#               metrics=['accuracy'])
 
-model.fit(X_train, Y_encoded, epochs=5)
+# model.fit(X_train, Y_encoded, epochs=5)
 
-Y_predicted = model.predict(X_test)
-print(np.array(Y_test_encoded == Y_predicted)[:25])
-print("Percentage correct: ", 100*np.sum(Y_test_encoded == Y_predicted)/len(Y_test_encoded))
+# Y_predicted = model.predict(X_test)
+# print(np.array(Y_test_encoded == Y_predicted)[:25])
+# print("Percentage correct: ", 100*np.sum(Y_test_encoded == Y_predicted)/len(Y_test_encoded))
