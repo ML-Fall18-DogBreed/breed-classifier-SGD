@@ -108,11 +108,15 @@ X_train, X_test, Y_train, Y_test = train_test_split(
 )
 
 
-#BEGIN SVM
+#BEGIN SGD
 print("Training model...")
 
-C=1.0
-clf = svm.SVC(kernel='poly', C=C,verbose=1)
+
+clf = SGDClassifier(alpha=0.0001, average=False, class_weight=None, epsilon=0.1,
+	       eta0=0.0, fit_intercept=True, l1_ratio=0.15,
+	       learning_rate='optimal', loss='log', max_iter=None, n_iter=None,
+	       n_jobs=-1, penalty='l2', power_t=0.5, random_state=None, shuffle=True,
+	       tol=0.001, verbose=1, warm_start=False,early_stopping=False,validation_fraction=0.05,n_iter_no_change=9)
 #test encoded data set
 enc = LabelEncoder()
 enc.fit(Y_train.values)
@@ -121,17 +125,17 @@ Y_test_encoded = enc.transform(Y_test.values)
 
 
 #Train model
-param_range = np.array([1,3,5,10])
+param_range = np.array([10,100,1000,10000,None])
 train_scores, test_scores = validation_curve(
-    clf, X_train, Y_train_encoded, param_name="degree", param_range=param_range,
+    clf, X_train, Y_train_encoded, param_name="n_iter", param_range=param_range,
     cv=3, scoring="accuracy", n_jobs=-1,verbose=1)
 train_scores_mean = np.mean(train_scores, axis=1)
 train_scores_std = np.std(train_scores, axis=1)
 test_scores_mean = np.mean(test_scores, axis=1)
 test_scores_std = np.std(test_scores, axis=1)
 
-plt.title("Validation Curve with SVM")
-plt.xlabel("degree of poly kernel")
+plt.title("Validation Curve with SGD")
+plt.xlabel("n_iter")
 plt.ylabel("Score")
 plt.ylim(0.0, 1.1)
 lw = 2
@@ -147,7 +151,7 @@ plt.fill_between(param_range, test_scores_mean - test_scores_std,
                  color="navy", lw=lw)
 plt.legend(loc="best")
 plt.show()
-plt.savefig("SVM_plot_poly_degree.png")
+plt.savefig("SGD_plot_n_iter_log.png")
 # model = clf.fit(X_train, Y_train_encoded)
 # dump(clf,'SVCVGG16.joblib')
 
