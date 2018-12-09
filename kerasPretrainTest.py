@@ -41,6 +41,7 @@ def loadDataset():
 	print(X.shape)
 
 	return X, Y
+
 def imageToFeatures(img_path, model):
 	img = image.load_img(img_path, target_size=(224, 224))
 	img_data = image.img_to_array(img)

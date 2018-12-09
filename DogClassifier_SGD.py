@@ -112,11 +112,10 @@ X_train, X_test, Y_train, Y_test = train_test_split(
 print("Training model...")
 
 
-clf = SGDClassifier(alpha=0.0001, average=False, class_weight=None, epsilon=0.1,
-	       eta0=0.0, fit_intercept=True, l1_ratio=0.15,
-	       learning_rate='optimal', loss='log', max_iter=None, n_iter=None,
-	       n_jobs=-1, penalty='l2', power_t=0.5, random_state=None, shuffle=True,
-	       tol=0.001, verbose=1, warm_start=False,early_stopping=False,validation_fraction=0.05,n_iter_no_change=9)
+clf = SGDClassifier(alpha=0.0001, average=False, class_weight=None, epsilon=0.1,eta0=0.0, fit_intercept=True,
+                    l1_ratio=0.15, learning_rate='optimal', loss='log', max_iter=None, n_iter=None,n_jobs=-1, penalty='l2',
+                    power_t=0.5, random_state=None, shuffle=True,tol=0.001, verbose=1, warm_start=False,early_stopping=False,
+                    validation_fraction=0.05,n_iter_no_change=9)
 #test encoded data set
 enc = LabelEncoder()
 enc.fit(Y_train.values)

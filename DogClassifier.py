@@ -21,32 +21,8 @@ pp = pprint.PrettyPrinter(indent=4)
 data = pd.read_csv("labels.csv")
 filelist = data['id']
 Y = data['breed']
-#y_train = Y[:2]
-#X_train = np.array([resize(np.array(Image.open('Train/'+filelist[a]+'.jpg')),(75,100),anti_aliasing=True) for a in range(2)])
 print("loading images")
-X = np.array([np.array(Image.open('Train_resized/'+fname+'.jpg')) for fname in filelist])
-
-
-
-
-#split validation
-X_train, X_test, y_train, y_test = train_test_split(
-    X,
-    Y,
-    test_size=0.15,
-    shuffle=True,
-    random_state=None,
-)
-# plt.imshow(X_train[0])
-# print(X_train.shape)
-# plt.imshow(X_train[1000])
-# print(type(y_train))
-# print(y_train.shape)
-# plt.show()
-
-
-#process with hog
-#create an instance of each transformer
+#X = np.array((np.load('Train_resized_np/'+fname+'.npy')) for fname in filelist)
 
 grayify = Transformers.RGB2GrayTransformer()
 hogify = Transformers.HogTransformer(
@@ -58,42 +34,74 @@ hogify = Transformers.HogTransformer(
 scalify = StandardScaler()
 
 print("transforming data")
-# call fit_transform on each transform converting X_train step by step
-X_train_gray = grayify.fit_transform(X_train)
-X_train_hog = hogify.fit_transform(X_train_gray)
-X_train_prepared = scalify.fit_transform(X_train_hog)
+for fname in filelist:
+	X = np.array([np.array(Image.open('Train_resized/'+fname+'.jpg'))])
+	# call fit_transform on each transform converting X_train step by step
+	X_train_gray = grayify.fit_transform(X)
+	X_train_hog = hogify.fit_transform(X_train_gray)
+	X_train_prepared = scalify.fit_transform(X_train_hog)
+	np.save('Train_resized_hog_np/'+fname+'.npy',X_train_prepared[0])
 
-X_test_gray = grayify.fit_transform(X_test)
-X_test_hog = hogify.fit_transform(X_test_gray)
-X_test_prepared = scalify.fit_transform(X_test_hog)
+#
+# #split validation
+# X_train, X_test, y_train, y_test = train_test_split(
+#     X,
+#     Y,
+#     test_size=0.15,
+#     shuffle=True,
+#     random_state=None,
+# )
+#
+#
+#
+# #process with hog
+# #create an instance of each transformer
+#
+# grayify = Transformers.RGB2GrayTransformer()
+# hogify = Transformers.HogTransformer(
+#     pixels_per_cell=(8, 8),
+#     cells_per_block=(2,2),
+#     orientations=9,
+#     block_norm='L2-Hys'
+# )
+# scalify = StandardScaler()
+#
+# print("transforming data")
+# # call fit_transform on each transform converting X_train step by step
+# X_train_gray = grayify.fit_transform(X_train)
+# X_train_hog = hogify.fit_transform(X_train_gray)
+# X_train_prepared = scalify.fit_transform(X_train_hog)
+#
+# X_test_gray = grayify.fit_transform(X_test)
+# X_test_hog = hogify.fit_transform(X_test_gray)
+# X_test_prepared = scalify.fit_transform(X_test_hog)
+#
 
-
-print(X_test_prepared.shape)
-print("begin training")
+#print("begin training")
 
 # #train
-
-for i in range(1,100,10):
-	sgd_clf = SGDClassifier(alpha=0.00001, average=False, class_weight=None, epsilon=0.1,
-	       eta0=0.0, fit_intercept=True, l1_ratio=0.15,
-	       learning_rate='optimal', loss='log', max_iter=i, n_iter=None,
-	       n_jobs=1, penalty='l2', power_t=0.5, random_state=None, shuffle=True,
-	       tol=0.001, verbose=0, warm_start=False,early_stopping=True,validation_fraction=0.05,n_iter_no_change=9)
-	model = sgd_clf.fit(X_train_prepared, y_train)
-
-	modelstr = "model"+str(i)+"maxIterations.joblib"
-	joblib.dump(sgd_clf,'model3.joblib')
-	print("Max Iterations = ", i)
-	# model = joblib.load('model2.joblib')
-	predicted = model.predict(X_test_prepared)
-
-	print(np.array(y_test == predicted)[:25])
-	print("Percentage correct: ", 100*np.sum(y_test == predicted)/len(y_test))
-
-
-	print("Done training")
-	score = model.score(X_test_prepared,y_test)
-	print("score: ",score)
+#
+# for i in range(1,100,10):
+# 	sgd_clf = SGDClassifier(alpha=0.00001, average=False, class_weight=None, epsilon=0.1,
+# 	       eta0=0.0, fit_intercept=True, l1_ratio=0.15,
+# 	       learning_rate='optimal', loss='log', max_iter=i, n_iter=None,
+# 	       n_jobs=1, penalty='l2', power_t=0.5, random_state=None, shuffle=True,
+# 	       tol=0.001, verbose=0, warm_start=False,early_stopping=True,validation_fraction=0.05,n_iter_no_change=9)
+# 	model = sgd_clf.fit(X_train_prepared, y_train)
+#
+# 	modelstr = "model"+str(i)+"maxIterations.joblib"
+# 	joblib.dump(sgd_clf,'model3.joblib')
+# 	print("Max Iterations = ", i)
+# 	# model = joblib.load('model2.joblib')
+# 	predicted = model.predict(X_test_prepared)
+#
+# 	print(np.array(y_test == predicted)[:25])
+# 	print("Percentage correct: ", 100*np.sum(y_test == predicted)/len(y_test))
+#
+#
+# 	print("Done training")
+# 	score = model.score(X_test_prepared,y_test)
+# 	print("score: ",score)
 
 
 #max_iter = 100, tol = .001 score = .77
