@@ -89,7 +89,7 @@ param_grid = [
 
 grid_search = GridSearchCV(clf, param_grid=param_grid, cv=3)
 start = time()
-grid_search.fit(X, Y_train_encoded)
+grid_search.fit(X_train, Y_train_encoded)
 
 print("GridSearchCV took %.2f seconds for %d candidate parameter settings."
       % (time() - start, len(grid_search.cv_results_['params'])))
