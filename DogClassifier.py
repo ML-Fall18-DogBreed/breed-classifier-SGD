@@ -34,13 +34,23 @@ hogify = Transformers.HogTransformer(
 scalify = StandardScaler()
 
 print("transforming data")
+Xi = []
 for fname in filelist:
-	X = np.array([np.array(Image.open('Train_resized/'+fname+'.jpg'))])
+	Xi.append(np.array(Image.open('Train_resized/'+fname+'.jpg')))
 	# call fit_transform on each transform converting X_train step by step
-	X_train_gray = grayify.fit_transform(X)
-	X_train_hog = hogify.fit_transform(X_train_gray)
-	X_train_prepared = scalify.fit_transform(X_train_hog)
-	np.save('Train_resized_hog_np/'+fname+'.npy',X_train_prepared[0])
+
+X = np.array(Xi)
+print(X.shape)
+X_train_gray = grayify.fit_transform(X)
+print(X_train_gray.shape)
+X_train_hog = hogify.fit_transform(X_train_gray)
+print(X_train_hog.shape)
+X_train_prepared = scalify.fit_transform(X_train_hog)
+print(X_train_prepared.shape)
+print(X_train_prepared[30,:30])
+
+for idx, val in enumerate(filelist):
+	np.save('Train_resized_hog_np/'+val+'.npy',X_train_prepared[idx])
 
 #
 # #split validation
